@@ -1,0 +1,35 @@
+services:
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - "3306:3306"
+    networks:
+      - maria
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "mariadb123"
+      MYSQL_DATABASE: "wordpressdb"
+      MYSQL_USER: "wordpressuser"
+      MYSQL_PASSWORD: "wordpress123"
+    restart: always
+
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "8081:80"
+    environment:
+      WORDPRESS_DB_HOST: "mariadb"
+      WORDPRESS_DB_USER: "wordpressuser"
+      WORDPRESS_DB_PASSWORD: "wordpress123"
+      WORDPRESS_DB_NAME: "wordpressdb"
+    networks:
+      - maria
+    restart: always
+
+volumes:
+  mariadb_data:
+
+networks:
+  maria:
+    driver: bridge
